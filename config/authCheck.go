@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	AuthCheck *cache.Cache
+	AuthCheck   *cache.Cache
+	HookSession *cache.Cache //单独使用这个存储hook返回的session是因为hook有时候会先于设备返回session
 )
 
 func init() {
@@ -24,7 +25,8 @@ func init() {
 		logs.BeeLogger.Error("set default value, authCodeCleanupInterval=%d, init authCodeCleanupInterval error: %s", authCodeCleanupInterval, err)
 	}
 
-	AuthCheck = cache.New(time.Duration(authCodeDefaultExpiration)*time.Second, time.Duration(authCodeCleanupInterval)*time.Second, )
+	AuthCheck = cache.New(time.Duration(authCodeDefaultExpiration)*time.Second, time.Duration(authCodeCleanupInterval)*time.Second)
+	HookSession = cache.New(time.Duration(authCodeDefaultExpiration)*time.Second, time.Duration(authCodeCleanupInterval)*time.Second)
 }
 
 type AuthClient struct {

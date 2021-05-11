@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/plugins/cors"
+	"github.com/common-nighthawk/go-figure"
 	"github.com/kqbi/service"
 	_ "github.com/tsingeye/FreeEhome/routers"
 	"github.com/tsingeye/FreeEhome/service/udp"
+	"github.com/tsingeye/FreeEhome/tools"
 	"github.com/tsingeye/FreeEhome/tools/logs"
 	"github.com/tsingeye/FreeEhome/tools/sqlDB"
 	"os"
@@ -18,11 +20,15 @@ type program struct {
 }
 
 func (p *program) Start(s service.Service) error {
+	appPath := tools.GetAbsPath()
+	os.Chdir(appPath)
+	beego.SetStaticPath("/", appPath+"www")
 	go p.run()
 	return nil
 }
 
 func (p *program) run() {
+	figure.NewFigure("FreeEhome", "", true).Print()
 	logs.BeeLogger.Info("FreeEHome Service Start!!!")
 	fmt.Printf("%s FreeEHome Service Start!!!\n", time.Now().Format("2006-01-02 15:04:05"))
 	//初始化数据库
